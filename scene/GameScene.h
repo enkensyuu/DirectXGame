@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "Audio.h"
-#include "DirectXCommon.h"
 #include "DebugText.h"
+#include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "SafeDelete.h"
@@ -47,11 +47,6 @@ class GameScene {
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	uint32_t textureHandle_ = 0;
-	Model* model_ = nullptr;
-	WorldTransform worldTransform_[100];
-	ViewProjection viewProjection_;
-	float viewAngle = 0.0f;
 
 	/// <summary>
 	/// ゲームシーン用

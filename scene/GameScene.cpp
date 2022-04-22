@@ -1,13 +1,12 @@
 ﻿#include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
-#include <random>
 
 using namespace DirectX;
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { delete model_; }
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 
@@ -15,79 +14,9 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
-	textureHandle_ = TextureManager::Load("mario.jpg");
-	model_ = Model::Create();
-	std::random_device seed_gen;
-	std::mt19937_64 engine(seed_gen());
-	std::uniform_real_distribution<float> rotDist(0.0f, XM_2PI);
-	std::uniform_real_distribution<float> posDist(-10.0f, 10.0f);
-	for (size_t i = 0; i < _countof(worldTransform_); i++) {
-		worldTransform_[i].scale_ = {1.0f, 1.0f, 1.0f};
-		worldTransform_[i].rotation_ = {rotDist(engine), rotDist(engine), rotDist(engine)};
-		worldTransform_[i].translation_ = {posDist(engine), posDist(engine), posDist(engine)};
-		worldTransform_[i].Initialize();
-	}
-
-	viewProjection_.eye = {0, 0, -50};
-
-	viewProjection_.target = {10, 0, 0};
-
-	viewProjection_.up = {cosf(XM_PI / 4.0f), sinf(XM_PI / 4.0f), 0.0f};
-
-	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {
-	XMFLOAT3 move = {0, 0, 0};
-
-	const float kEyeSpeed = 0.2f;
-
-	if (input_->PushKey(DIK_W)) {
-		move = {0, 0, kEyeSpeed};
-	} else if (input_->PushKey(DIK_S)) {
-		move = {0, 0, -kEyeSpeed};
-	}
-
-	viewProjection_.eye.x += move.x;
-	viewProjection_.eye.y += move.y;
-	viewProjection_.eye.z += move.z;
-
-	debugText_->SetPos(50, 50);
-	debugText_->Printf(
-	  "eye:(%f,%f,%f)", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
-
-	const float kTargetSpeed = 0.2f;
-
-	if (input_->PushKey(DIK_LEFT)) {
-		move = {-kTargetSpeed, 0, 0};
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		move = {kTargetSpeed, 0, 0};
-	}
-
-	viewProjection_.target.x += move.x;
-	viewProjection_.target.y += move.y;
-	viewProjection_.target.z += move.z;
-
-	debugText_->SetPos(50, 70);
-	debugText_->Printf(
-	  "target:(%f,%f,%f)", viewProjection_.target.x, viewProjection_.target.y,
-	  viewProjection_.target.z);
-
-	const float kUpRotSpeed = 0.05f;
-
-	if (input_->PushKey(DIK_SPACE)) {
-		viewAngle += kUpRotSpeed;
-		viewAngle = fmodf(viewAngle, XM_2PI);
-	}
-
-	viewProjection_.up = {cosf(viewAngle), sinf(viewAngle), 0.0f};
-
-	debugText_->SetPos(50, 90);
-	debugText_->Printf(
-	  "up:(%f,%f,%f)", viewProjection_.up.x, viewProjection_.up.y, viewProjection_.up.z);
-
-	viewProjection_.UpdateMatrix();
-}
+void GameScene::Update() {}
 
 void GameScene::Draw() {
 
@@ -115,9 +44,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	for (size_t i = 0; i < _countof(worldTransform_); i++) {
-		model_->Draw(worldTransform_[i], viewProjection_, textureHandle_);
-	}
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
